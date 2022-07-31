@@ -55,6 +55,15 @@ class NeuralNetwork (val inputCount:Int, val hiddenCount:Int,  val outputCount:I
 
     override fun draw(batch: Batch) {
 
+        inputLayer.forEach {
+            batch.draw(it)
+        }
+        hiddenLayer.forEach {
+            batch.draw(it)
+        }
+        outputLayer.forEach {
+            batch.draw(it)
+        }
     }
 
     override fun update(delta: Long) {
