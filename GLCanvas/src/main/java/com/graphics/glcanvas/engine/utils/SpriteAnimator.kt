@@ -16,7 +16,6 @@ class SpriteAnimator(name: String, frame: AnimationFrame, sheet: SpriteSheet) {
         }
     }
 
-
     private val frames=HashMap<String,Container>()
 
     init {
@@ -61,7 +60,6 @@ class SpriteAnimator(name: String, frame: AnimationFrame, sheet: SpriteSheet) {
     }
 
     fun update(time:Long){
-
         if(activated){
             val frame=getCurrentFrame()
             if(frame!=null)

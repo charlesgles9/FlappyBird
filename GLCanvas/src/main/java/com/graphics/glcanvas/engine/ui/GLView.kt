@@ -270,7 +270,11 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
               if (centerText)
                   text?.set(position.x - tw, position.y - th, getZ())
               else
+<<<<<<< HEAD
                   text?.set(position.x - width * 0.45f, position.y - height * 0.4f, getZ())
+=======
+                  text?.set(position.x - width * 0.45f, position.y - height * 0.45f, getZ())
+>>>>>>> e592c33... flappy bird implementation using Neuro-Evolution
 
               //clips text that are out of the viewing area of this entity
               LayoutConstraint.clipView(position.x,
