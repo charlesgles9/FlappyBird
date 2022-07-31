@@ -2,20 +2,14 @@ package com.evolution.flappybird.entities
 
 import com.evolution.flappybird.ai.NeuralNetwork
 import com.graphics.glcanvas.engine.Batch
-import com.graphics.glcanvas.engine.Camera2D
-import com.graphics.glcanvas.engine.Update
 import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.structures.RectF
-import java.lang.Math.pow
 import kotlin.math.abs
-import kotlin.math.min
-import kotlin.math.pow
-import kotlin.math.sqrt
 
 class Bird(x:Float,y:Float,width:Float,height:Float,val srcW:Float,val srcH:Float):RectF(x,y,width, height){
     private var velocity=Vector2f(2.9f,0f)
-    private var gravity=Vector2f(0f,4.9f)
-    private var flapVelocity=10f
+    private var gravity=Vector2f(0f,5.9f)
+    private var flapVelocity=14f
     private var friction=0.92f
     var score=0f
     var alive=true
@@ -45,7 +39,7 @@ class Bird(x:Float,y:Float,width:Float,height:Float,val srcW:Float,val srcH:Floa
 
           velocity.y*= friction
 
-        //incase this bird brain hits the ground or the top of the world view
+        //in case this bird brain hits the ground or the top of the world view
         if(getY()>=srcH-getHeight()||getY()<=getHeight()){
             score=getX()
             reset()
@@ -63,12 +57,13 @@ class Bird(x:Float,y:Float,width:Float,height:Float,val srcW:Float,val srcH:Floa
         val center=(closest.first.getHeight()*0.5+closest.first.getY()+distance3*0.5)/srcH
         //the lowest center position between the first and second pillar
         val yDiff1=getY()-(closest.first.getHeight()*0.5+closest.first.getY()+distance3*0.5)
-        // the highest position between the secnd and the first pillar
+        // the highest position between the second and the first pillar
         val yDiff2=getY()-(closest.second.getY()-closest.second.getHeight()*0.5-distance3*0.5)
-        val value= network.predict(mutableListOf(center,yPosition,yDiff1,yDiff2))[0]
+        //make a prediction
+        val output= network.predict(mutableListOf(center,yPosition,yDiff1,yDiff2))
+        val flapValue=output[0]
 
-    //   println(center)
-        if(value>0.5)
+        if(flapValue>0.5)
             flap()
 
     }
