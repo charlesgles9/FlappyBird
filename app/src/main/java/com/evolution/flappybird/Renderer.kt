@@ -19,11 +19,11 @@ import kotlin.random.Random
 
 class Renderer(private val context: Context,private var width:Float,private var height:Float):GLRendererView(width,height) {
 
-    private val pillars=Pillars(Vector2f(100f,0f), Vector2f(15000f,height),300f,150f,150f,height)
+    private val pillars=Pillars(Vector2f(100f,0f), Vector2f(15000f,height),300f,130f,150f,height)
     private val camera=Camera2D(10f)
     private val uICamera=Camera2D(10f)
     private val batch=Batch()
-    private val birds= MutableList(300,init = {Bird(100f,height*0.5f,50f,50f,pillars.maxDistance.x,height)})
+    private val birds= MutableList(100,init = {Bird(100f,height*0.5f,50f,50f,pillars.maxDistance.x,height)})
     private val deadBirds= mutableListOf<Bird>()
     private val axis=AxisABB()
     private val layout=RelativeLayoutConstraint(null,width, height)
@@ -88,12 +88,27 @@ class Renderer(private val context: Context,private var width:Float,private var 
                 bird.draw(batch)
           }
 
+
+
         batch.end()
 
         //draw UI elements
         batch.begin(uICamera)
         layout.draw(batch)
         batch.end()
+
+        //draw network
+        batch.begin(uICamera)
+        if(!birds.isEmpty()){
+            val bird=birds[birds.size-1]
+            bird.network.start.set(width*0.8f,height*0.6f)
+            bird.network.initGraphics()
+            bird.network.draw(batch)
+        }
+        batch.end()
+
+
+
 
     }
 
@@ -125,7 +140,7 @@ class Renderer(private val context: Context,private var width:Float,private var 
                     val value1 = pillars.closest(bird, pillar.second)
                     val value2 = pillars.closest(bird, pillar.first)
                     //calculate the closest pillar for every bird
-                    if (value1 < closest && value1 <= value2 && bird.getX() < (pillar.second.getX()+pillar.second.getWidth())) {
+                    if (value1 < closest && value1 <= value2 && bird.getX() < (pillar.second.getX()+pillar.second.getWidth()*0.52f)) {
                         closest = value1
                         closestObj = pillar
                     }
