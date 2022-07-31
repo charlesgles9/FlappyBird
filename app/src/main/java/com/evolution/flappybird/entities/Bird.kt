@@ -5,15 +5,17 @@ import com.graphics.glcanvas.engine.Batch
 import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.structures.RectF
 import kotlin.math.abs
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 class Bird(x:Float,y:Float,width:Float,height:Float,val srcW:Float,val srcH:Float):RectF(x,y,width, height){
     private var velocity=Vector2f(2.9f,0f)
-    private var gravity=Vector2f(0f,5.9f)
+    private var gravity=Vector2f(0f,6.9f)
     private var flapVelocity=14f
     private var friction=0.92f
     var score=0f
     var alive=true
-    var network= NeuralNetwork(4,6,1)
+    var network= NeuralNetwork(4,8,1)
     constructor(x:Float,y:Float,width:Float,height:Float, srcW:Float, srcH:Float,network: NeuralNetwork):this(x, y, width, height, srcW, srcH){
         this.network=network
     }
@@ -22,7 +24,7 @@ class Bird(x:Float,y:Float,width:Float,height:Float,val srcW:Float,val srcH:Floa
         batch.draw(this)
     }
 
-    fun flap(){
+    private fun flap(){
         velocity.y=-flapVelocity
     }
 
@@ -36,8 +38,7 @@ class Bird(x:Float,y:Float,width:Float,height:Float,val srcW:Float,val srcH:Floa
             return
         }
 
-
-          velocity.y*= friction
+         velocity.y*= friction
 
         //in case this bird brain hits the ground or the top of the world view
         if(getY()>=srcH-getHeight()||getY()<=getHeight()){
@@ -48,7 +49,7 @@ class Bird(x:Float,y:Float,width:Float,height:Float,val srcW:Float,val srcH:Floa
         }
         set(getX()+velocity.x,getY()+velocity.y+gravity.y)
         // horizontal distance between the bird and the bottom or top pillar
-        val nearest1= (closest.second.getX()+closest.second.getWidth()*0.5-this.getX()) /srcW
+        val nearest1= sqrt ((closest.second.getX()-getX()).pow(2f)+(closest.second.getY()-getY()).pow(2f)).toDouble() /srcW
         // y Position of the bird
         val yPosition=((getY())/srcH).toDouble()
         //difference between the bottom and the top pillar
