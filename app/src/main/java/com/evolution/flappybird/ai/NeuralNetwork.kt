@@ -79,6 +79,7 @@ class NeuralNetwork (val inputCount:Int, val hiddenCount:Int,  val outputCount:I
                  val hidden=hiddenLayer[j]
                  line.set(input.getX(),input.getY(),
                           hidden.getX(),hidden.getY())
+                 line.setColor(ColorRGBA.white)
              }
          }
 
@@ -89,6 +90,7 @@ class NeuralNetwork (val inputCount:Int, val hiddenCount:Int,  val outputCount:I
                  val output=outputLayer[j]
                  line.set(hidden.getX(),hidden.getY(),
                      output.getX(),output.getY())
+                 line.setColor(ColorRGBA.white)
              }
          }
 

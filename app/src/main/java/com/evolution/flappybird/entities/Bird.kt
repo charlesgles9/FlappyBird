@@ -4,6 +4,9 @@ import com.evolution.flappybird.ai.NeuralNetwork
 import com.graphics.glcanvas.engine.Batch
 import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.structures.RectF
+import com.graphics.glcanvas.engine.utils.AnimationFrame
+import com.graphics.glcanvas.engine.utils.SpriteAnimator
+import com.graphics.glcanvas.engine.utils.SpriteSheet
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -16,10 +19,25 @@ class Bird(x:Float,y:Float,width:Float,height:Float,val srcW:Float,val srcH:Floa
     var score=0f
     var alive=true
     var network= NeuralNetwork(4,8,1)
+    var angle=0f
+    init {
+        setSpriteSheet(SpriteSheet(4,1))
+        getSpriteSheet().setCurrentFrame(0)
+        setAnimator(SpriteAnimator("fly", AnimationFrame(50L,4,1),getSpriteSheet()))
+        getAnimator()?.put("idle", AnimationFrame(100L,1,1),getSpriteSheet())
+        getAnimator()?.setActivated(true)
+        getAnimator()?.setLooping(true)
+        getAnimator()?.setCurrent("idle")
+
+    }
     constructor(x:Float,y:Float,width:Float,height:Float, srcW:Float, srcH:Float,network: NeuralNetwork):this(x, y, width, height, srcW, srcH){
         this.network=network
+
     }
+
+
     fun draw(batch: Batch) {
+
         if(alive)
         batch.draw(this)
     }
@@ -32,13 +50,18 @@ class Bird(x:Float,y:Float,width:Float,height:Float,val srcW:Float,val srcH:Floa
         set(100.0f,srcH*0.5f)
     }
 
-    fun update(closest:Pair<RectF,RectF>){
+    @Override
+    fun update( time:Long,closest:Pair<RectF,RectF>){
+
+
+        getAnimator()?.update(time)
         if(!alive) {
             reset()
             return
         }
 
          velocity.y*= friction
+
 
         //in case this bird brain hits the ground or the top of the world view
         if(getY()>=srcH-getHeight()||getY()<=getHeight()){
@@ -47,7 +70,15 @@ class Bird(x:Float,y:Float,width:Float,height:Float,val srcW:Float,val srcH:Floa
             alive=false
             return
         }
-        set(getX()+velocity.x,getY()+velocity.y+gravity.y)
+
+        val vy=velocity.y+gravity.y
+        angle = if(vy<0){
+            abs(vy*3f)
+        }else{
+            -gravity.y*3f
+        }
+
+        set(getX()+velocity.x,getY()+vy)
         // horizontal distance between the bird and the bottom or top pillar
         val nearest1= sqrt ((closest.second.getX()-getX()).pow(2f)+(closest.second.getY()-getY()).pow(2f)).toDouble() /srcW
         // y Position of the bird
@@ -64,8 +95,13 @@ class Bird(x:Float,y:Float,width:Float,height:Float,val srcW:Float,val srcH:Floa
         val output= network.predict(mutableListOf(center,yPosition,yDiff1,yDiff2))
         val flapValue=output[0]
 
-        if(flapValue>0.5)
+         if(flapValue>0.5) {
             flap()
+            getAnimator()?.setCurrent("fly")
+        } else {
+            getAnimator()?.setCurrent("idle")
+        }
+         setRotationZ(angle)
 
     }
 
