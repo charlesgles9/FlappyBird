@@ -186,7 +186,7 @@ class Renderer(private val context: Context,private var width:Float,private var 
                     val value1 = pillars.closest(bird, pillar.second)
                     val value2 = pillars.closest(bird, pillar.first)
                     //calculate the closest pillar for every bird
-                    if (value1 < closest && value1 <= value2 && bird.getX() < (pillar.second.getX()+pillar.second.getWidth()*0.55f)) {
+                    if (value1 < closest && value1 <= value2 && bird.getX() < (pillar.second.getX()+pillar.second.getWidth()*0.56f)) {
                         closest = value1
                         closestObj = pillar
                     }
@@ -261,6 +261,7 @@ class Renderer(private val context: Context,private var width:Float,private var 
                     //50% mutation rate, this creates variation
                     NeuralNetwork.mutate(child, 0.5f)
                     val bird = createBird(child)
+                        bird.gradient(parent1.getColors())
                         bird.setTexture(birdTexture!!)
                     new_pop.add(bird)
 

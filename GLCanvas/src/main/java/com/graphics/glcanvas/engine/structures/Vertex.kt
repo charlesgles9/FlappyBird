@@ -63,6 +63,9 @@ open class Vertex(pSize: Int) {
         return colors[index]
     }
 
+    fun getColors():MutableList<ColorRGBA>{
+        return colors
+    }
     fun getColor():ColorRGBA{
         return colors[0]
     }

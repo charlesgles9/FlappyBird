@@ -6,8 +6,7 @@ import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.structures.Circle
 import com.graphics.glcanvas.engine.structures.Line
-import kotlin.math.min
-import kotlin.random.Random
+
 
 class NeuralNetwork (val inputCount:Int, val hiddenCount:Int,  val outputCount:Int):Update{
     private val weightsInputHidden=Matrix(hiddenCount,inputCount)
@@ -102,8 +101,7 @@ class NeuralNetwork (val inputCount:Int, val hiddenCount:Int,  val outputCount:I
         val hidden=Matrix.multiply(weightsInputHidden,input)
         hidden.add(biasHidden)
         hidden.sigmoid()
-
-
+        
         val output=Matrix.multiply(weightsHiddenOutput,hidden)
         output.add(biasOutput)
         output.sigmoid()
